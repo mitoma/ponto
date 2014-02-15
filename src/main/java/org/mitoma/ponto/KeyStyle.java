@@ -31,9 +31,15 @@ public enum KeyStyle {
     private void writeNode(PrintWriter pw, Node node, int depth) {
       for (String methodName : node.getMethods()) {
         pw.print(indent(depth));
+
+        String fullName = node.getFullName();
+        String keyName = methodName;
+        if (!fullName.isEmpty()) {
+          keyName = String.format("%s.%s", fullName, methodName);
+        }
         pw.println(String.format(
             "public static String %s(){ return getProperties(\"%s\"); }",
-            methodName, String.format("%s.%s", node.getFullName(), methodName)));
+            methodName, keyName));
       }
       for (Node child : node.getChilds()) {
         pw.print(indent(depth));
