@@ -32,8 +32,9 @@ PontoResource.setting.key1();
 
 ## 簡単な使い方
 
-1. maven に依存関係を追加する
-> ```
+### maven に依存関係を追加する
+
+```
   <dependencies>
   	<dependency>
   		<groupId>org.mitoma.ponto</groupId>
@@ -44,24 +45,31 @@ PontoResource.setting.key1();
   </dependencies>
 ```
 
-1. プロパティファイルを用意する。
-> src/main/resources/ponto.properties
+### プロパティファイルを用意する。
+
+src/main/resources/ponto.properties
+
 ```
 setting.key1=value1
 setting.key2=value2
 setting.key3=value3
 ```
 
-1. コンフィグファイルを作成し、アノテーションをつける。
-> src/main/java/your/package/PontoConfig.java
+### コンフィグファイルを作成し、アノテーションをつける。
+
+src/main/java/your/package/PontoConfig.java
+
 ```
 @ConstantResource
 public class PontoConfig {
 }
 ```
 
-1. mvn compile する。
-> target/generated-sources/annotations に org.mitoma.PontoResource というクラスファイルが生成される。
+### mvn compile する。
+
+target/generated-sources/annotations に org.mitoma.PontoResource というクラスファイルが生成される。
+
+このクラスを使ってタイプセーフにプロパティファイルにアクセスじゃー！
 
 ## アノテーションリファレンス
 
