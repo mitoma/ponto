@@ -26,10 +26,9 @@ public class PontoProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations,
       RoundEnvironment roundEnv) {
-    for (Element classsEl : roundEnv
+    for (Element elem : roundEnv
         .getElementsAnnotatedWith(ConstantResource.class)) {
-      ConstantResource annotation = classsEl
-          .getAnnotation(ConstantResource.class);
+      ConstantResource annotation = elem.getAnnotation(ConstantResource.class);
 
       String[] propFiles = annotation.value();
       String packageName = annotation.packageName();
@@ -50,7 +49,7 @@ public class PontoProcessor extends AbstractProcessor {
           }
         }
 
-        generateSource(packageName, className, keyStyle, properties);
+        generateSource(packageName, className, keyStyle, properties, propFiles);
       } catch (IOException e1) {
         messager.printMessage(Diagnostic.Kind.ERROR, e1.toString());
       }
@@ -59,7 +58,8 @@ public class PontoProcessor extends AbstractProcessor {
   }
 
   private void generateSource(String packageName, String className,
-      KeyStyle keyStyle, Properties properties) throws IOException {
+      KeyStyle keyStyle, Properties properties, String[] propFiles)
+      throws IOException {
     Filer filer = processingEnv.getFiler();
 
     JavaFileObject source = filer.createSourceFile(String.format("%s.%s",
@@ -76,7 +76,20 @@ public class PontoProcessor extends AbstractProcessor {
     pw.println("  static {");
     pw.println("    ClassLoader loader = ClassLoader.getSystemClassLoader();");
     pw.println("    try{");
-    pw.println("      properties.load(loader.getResourceAsStream(\"ponto.properties\"));");
+
+    for (String propFile : propFiles) {
+      if (propFile.endsWith(".xml")) {
+        pw.println(String
+            .format(
+                "      properties.loadFromXML(loader.getResourceAsStream(\"%s\"));",
+                propFile));
+      } else {
+        pw.println(String.format(
+            "      properties.load(loader.getResourceAsStream(\"%s\"));",
+            propFile));
+      }
+    }
+
     pw.println("    }catch (Exception e){}");
     pw.println("  }");
     pw.println("  private static String getProperties(String key){");
@@ -86,5 +99,4 @@ public class PontoProcessor extends AbstractProcessor {
     pw.flush();
     pw.close();
   }
-
 }
