@@ -15,7 +15,7 @@ public enum KeyStyle {
         String methodName = keyString.replace('.', '_');
         pw.println(String.format(
             "  public static String %s(){ return getProperties(\"%s\"); }",
-            methodName, keyString));
+            escapedMethodName(methodName), keyString));
       }
     }
   },
@@ -32,10 +32,6 @@ public enum KeyStyle {
 
     private void writeNode(PrintWriter pw, Node node, int depth) {
       for (String methodName : node.getMethods()) {
-        String escapedMethodName = methodName;  
-        if(!SourceVersion.isName(methodName)){
-          escapedMethodName = methodName + "_escaped";
-        }
         pw.print(indent(depth));
 
         String fullName = node.getFullName();
@@ -45,7 +41,7 @@ public enum KeyStyle {
         }
         pw.println(String.format(
             "public static String %s(){ return getProperties(\"%s\"); }",
-            escapedMethodName, keyName));
+            escapedMethodName(methodName), keyName));
       }
       for (Node child : node.getChilds()) {
         pw.print(indent(depth));
@@ -68,4 +64,10 @@ public enum KeyStyle {
 
   public abstract void writeMethods(PrintWriter pw, Properties properties);
 
+  private static String escapedMethodName(String methodName) {
+    if(!SourceVersion.isName(methodName)){
+      return methodName + "_escaped";
+    }
+    return methodName;
+  }
 }
