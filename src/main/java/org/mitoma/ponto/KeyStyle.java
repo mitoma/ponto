@@ -3,6 +3,8 @@ package org.mitoma.ponto;
 import java.io.PrintWriter;
 import java.util.Properties;
 
+import javax.lang.model.SourceVersion;
+
 public enum KeyStyle {
 
   Flat {
@@ -30,6 +32,10 @@ public enum KeyStyle {
 
     private void writeNode(PrintWriter pw, Node node, int depth) {
       for (String methodName : node.getMethods()) {
+        String escapedMethodName = methodName;  
+        if(!SourceVersion.isName(methodName)){
+          escapedMethodName = methodName + "_escaped";
+        }
         pw.print(indent(depth));
 
         String fullName = node.getFullName();
@@ -39,7 +45,7 @@ public enum KeyStyle {
         }
         pw.println(String.format(
             "public static String %s(){ return getProperties(\"%s\"); }",
-            methodName, keyName));
+            escapedMethodName, keyName));
       }
       for (Node child : node.getChilds()) {
         pw.print(indent(depth));
