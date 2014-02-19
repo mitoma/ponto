@@ -65,8 +65,8 @@ public enum KeyStyle {
   public abstract void writeMethods(PrintWriter pw, Properties properties);
 
   private static String escapedMethodName(String methodName) {
-    if(!SourceVersion.isName(methodName)){
-      return methodName + "_escaped";
+    if (!SourceVersion.isName(methodName)) {
+      return "_" + methodName;
     }
     return methodName;
   }
