@@ -1,6 +1,7 @@
 package org.mitoma.ponto;
 
 import java.io.PrintWriter;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.lang.model.SourceVersion;
@@ -12,10 +13,11 @@ public enum KeyStyle {
     public void writeMethods(PrintWriter pw, Properties properties) {
       for (Object key : properties.keySet()) {
         String keyString = key.toString();
-        String methodName = keyString.replace('.', '_');
-        pw.println(String.format(
-            "  public static String %s(){ return getProperties(\"%s\"); }",
-            escapedMethodName(methodName), keyString));
+        MethodType type = MethodType.findMethodType(keyString);
+        String methodName = keyString.replace('.', '_').replaceFirst(
+            String.format("_%s\\Z", type.getMethodKey()), "");
+        pw.println(type
+            .toMethodString(escapedMethodName(methodName), keyString));
       }
     }
   },
@@ -31,17 +33,21 @@ public enum KeyStyle {
     }
 
     private void writeNode(PrintWriter pw, Node node, int depth) {
-      for (String methodName : node.getMethods()) {
+      for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
         pw.print(indent(depth));
 
         String fullName = node.getFullName();
-        String keyName = methodName;
+        String keyName = method.getKey();
         if (!fullName.isEmpty()) {
-          keyName = String.format("%s.%s", fullName, methodName);
+          keyName = String.format("%s.%s", fullName, method.getKey());
         }
-        pw.println(String.format(
-            "public static String %s(){ return getProperties(\"%s\"); }",
-            escapedMethodName(methodName), keyName));
+        if (method.getValue() != MethodType.STRING) {
+          keyName = String.format("%s.%s", keyName, method.getValue()
+              .getMethodKey());
+        }
+
+        pw.println(method.getValue().toMethodString(
+            escapedMethodName(method.getKey()), keyName));
       }
       for (Node child : node.getChilds()) {
         pw.print(indent(depth));

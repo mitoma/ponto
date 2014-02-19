@@ -2,14 +2,16 @@ package org.mitoma.ponto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Node {
 
-  private Node         parent  = null;
-  private List<Node>   childs  = new ArrayList<>();
-  private List<String> methods = new ArrayList<>();
-  private String       name;
+  private Node                    parent  = null;
+  private List<Node>              childs  = new ArrayList<>();
+  private Map<String, MethodType> methods = new HashMap<>();
+  private String                  name;
 
   public Node(Node parent, String name) {
     if (parent == null) {
@@ -28,7 +30,7 @@ public class Node {
     return childs;
   }
 
-  public List<String> getMethods() {
+  public Map<String, MethodType> getMethods() {
     return methods;
   }
 
@@ -39,11 +41,18 @@ public class Node {
 
   private void addKeys(String[] elems) {
     if (elems.length == 1) {
-      methods.add(elems[0]);
-    } else {
-      Node child = getChildsOrCreate(elems[0]);
-      child.addKeys(Arrays.copyOfRange(elems, 1, elems.length));
+      methods.put(elems[0], MethodType.STRING);
+      return;
     }
+    if (elems.length == 2) {
+      MethodType type = MethodType.findMethodType(elems[1]);
+      if (type != MethodType.STRING) {
+        methods.put(elems[0], type);
+        return;
+      }
+    }
+    Node child = getChildsOrCreate(elems[0]);
+    child.addKeys(Arrays.copyOfRange(elems, 1, elems.length));
   }
 
   private Node getChildsOrCreate(String name) {
