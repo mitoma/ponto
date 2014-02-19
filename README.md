@@ -7,6 +7,8 @@ Pontoはタイプセーフなプロパティファイルへのアクセサを生
 タイプセーフなプロパティファイルへのアクセサをaptによって自動生成することにより、
 プロパティファイルのキー名の入力間違いなどによるバグをコンパイル時に検出することができます。
 
+また、キー名の最後に _int, _date など型情報を追加することにより文字列以外の定数もアクセサクラスから直接 int や java.util.Date などの型で取得できます。
+
 ### Java標準のプロパティファイルへのアクセス方法
 
 ```
@@ -51,8 +53,12 @@ src/main/resources/ponto.properties
 
 ```
 setting.key1=value1
-setting.key2=value2
-setting.key3=value3
+setting.key2._int=123
+setting.key3._long=123412341234
+setting.key4._float=123.123
+setting.key5._double=123123.123123
+setting.key6._date=2014-01-01
+setting.key7._timestamp=2014-01-01 01:02:03
 ```
 
 ### コンフィグファイルを作成し、アノテーションをつける。
