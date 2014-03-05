@@ -9,4 +9,8 @@ public @interface ConstantResource {
 
   public KeyStyle keyStyle() default KeyStyle.Hierarchical;
 
+  public String envKey() default "PONTO_ENV";
+
+  public String envDefault() default "development";
+
 }
