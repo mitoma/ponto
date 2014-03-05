@@ -16,6 +16,7 @@ public enum KeyStyle {
         MethodType type = MethodType.findMethodType(keyString);
         String methodName = keyString.replace('.', '_').replaceFirst(
             String.format("_%s\\Z", type.getMethodKey()), "");
+        pw.print(indent(1));
         pw.println(type
             .toMethodString(escapedMethodName(methodName), keyString));
       }
@@ -58,14 +59,6 @@ public enum KeyStyle {
       }
     }
 
-    private String indent(int depth) {
-      StringBuilder buf = new StringBuilder();
-      for (int i = 0; i < depth; i++) {
-        buf.append("  ");
-      }
-      return buf.toString();
-    }
-
   };
 
   public abstract void writeMethods(PrintWriter pw, Properties properties);
@@ -75,5 +68,13 @@ public enum KeyStyle {
       return "_" + methodName;
     }
     return methodName;
+  }
+
+  private static String indent(int depth) {
+    StringBuilder buf = new StringBuilder();
+    for (int i = 0; i < depth; i++) {
+      buf.append("  ");
+    }
+    return buf.toString();
   }
 }
