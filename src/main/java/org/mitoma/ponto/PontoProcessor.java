@@ -90,7 +90,9 @@ public class PontoProcessor extends AbstractProcessor {
       }
     }
 
-    pw.println("    }catch (Exception e){}");
+    pw.println("    } catch (java.io.IOException e) {");
+    pw.println("        throw new RuntimeException(\"Ponto initialize error.\", e);");
+    pw.println("    }");
     pw.println("  }");
     pw.println("  private static String getProperties(String key){");
     pw.println("    return properties.getProperty(key);");
