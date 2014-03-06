@@ -104,27 +104,6 @@ public class PontoProcessor extends AbstractProcessor {
     pw.close();
   }
 
-  public static void main(String[] args) {
-    String propFile = "hoge/moge/ponto.properties";
-
-    ClassLoader loader = ClassLoader.getSystemClassLoader();
-    // InputStream stream = loader.getResourceAsStream(propFile);
-    InputStream stream = loader.getResourceAsStream(null);
-    System.out.println(stream);
-
-    int lastIndex = propFile.lastIndexOf(".");
-    String env = System.getenv("");
-    if (env == null) {
-      env = "default";
-    }
-    String pre = propFile.substring(0, lastIndex);
-    String post = propFile.substring(lastIndex, propFile.length());
-    String envProperties = String.format("%s_%s%s", pre, env, post);
-    System.out.println(pre);
-    System.out.println(post);
-    System.out.println(envProperties);
-  }
-
   private Properties loadProperties(String[] propFiles) throws IOException,
       InvalidPropertiesFormatException {
     Properties properties = new Properties();
