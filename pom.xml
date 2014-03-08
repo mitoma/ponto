@@ -3,6 +3,13 @@
   <groupId>org.mitoma.ponto</groupId>
   <artifactId>ponto</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <repositories>
+    <repository>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>http://maven.seasar.org/maven2</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>
@@ -17,4 +24,12 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.seasar.aptina</groupId>
+      <artifactId>aptina-unit</artifactId>
+      <version>1.0.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
