@@ -3,7 +3,9 @@ package org.mitoma.ponto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
@@ -33,8 +36,9 @@ public class PontoProcessor extends AbstractProcessor {
       Messager messager = processingEnv.getMessager();
       try {
         generateSource(annotation);
-      } catch (IOException e1) {
-        messager.printMessage(Diagnostic.Kind.ERROR, e1.toString());
+      } catch (IOException | IllegalArgumentException e) {
+        messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
+        return false;
       }
     }
     return true;
@@ -46,6 +50,14 @@ public class PontoProcessor extends AbstractProcessor {
     String className = annotation.className();
     Filer filer = processingEnv.getFiler();
     Properties properties = loadProperties(propFiles);
+    List<String> errors = validation(properties);
+    if (!errors.isEmpty()) {
+      Messager messager = processingEnv.getMessager();
+      for (String err : errors) {
+        messager.printMessage(Kind.ERROR, err);
+      }
+      throw new IllegalArgumentException("invalid propertie file.");
+    }
 
     JavaFileObject source = filer.createSourceFile(String.format("%s.%s",
         packageName, className));
@@ -118,5 +130,20 @@ public class PontoProcessor extends AbstractProcessor {
       }
     }
     return properties;
+  }
+
+  private List<String> validation(Properties properties) {
+    List<String> errors = new ArrayList<>();
+    for (Object key : properties.keySet()) {
+      String keyStr = (String) key;
+      MethodType methodType = MethodType.findMethodType(keyStr);
+      String value = properties.getProperty(keyStr);
+      if (!methodType.isValid(value)) {
+        errors.add(String.format(
+            "invalid key. type[%s], format[%s], value[%s]", methodType, keyStr,
+            value));
+      }
+    }
+    return errors;
   }
 }

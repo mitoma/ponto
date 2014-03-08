@@ -1,5 +1,7 @@
 package org.mitoma.ponto;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public enum MethodType {
   STRING {
@@ -13,6 +15,11 @@ public enum MethodType {
       return String.format(
           "public static String %s(){ return getProperties(\"%s\"); }",
           escapedMethodName, keyName);
+    }
+
+    @Override
+    public boolean isValid(String property) {
+      return true;
     }
   },
   INTEGER {
@@ -28,6 +35,16 @@ public enum MethodType {
               "public static int %s(){ return Integer.valueOf(getProperties(\"%s\")); }",
               escapedMethodName, keyName);
     }
+
+    @Override
+    public boolean isValid(String property) {
+      try {
+        Integer.valueOf(property);
+        return true;
+      } catch (NumberFormatException e) {
+        return false;
+      }
+    }
   },
   LONG {
     @Override
@@ -41,6 +58,16 @@ public enum MethodType {
           .format(
               "public static long %s(){ return Long.valueOf(getProperties(\"%s\")); }",
               escapedMethodName, keyName);
+    }
+
+    @Override
+    public boolean isValid(String property) {
+      try {
+        Long.valueOf(property);
+        return true;
+      } catch (NumberFormatException e) {
+        return false;
+      }
     }
   },
   FLOAT {
@@ -56,6 +83,16 @@ public enum MethodType {
               "public static float %s(){ return Float.valueOf(getProperties(\"%s\")); }",
               escapedMethodName, keyName);
     }
+
+    @Override
+    public boolean isValid(String property) {
+      try {
+        Float.valueOf(property);
+        return true;
+      } catch (NumberFormatException e) {
+        return false;
+      }
+    }
   },
   DOUBLE {
     @Override
@@ -70,8 +107,20 @@ public enum MethodType {
               "public static double %s(){ return Double.valueOf(getProperties(\"%s\")); }",
               escapedMethodName, keyName);
     }
+
+    @Override
+    public boolean isValid(String property) {
+      try {
+        Double.valueOf(property);
+        return true;
+      } catch (NumberFormatException e) {
+        return false;
+      }
+    }
   },
   DATE {
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     @Override
     public String getMethodKey() {
       return "_date";
@@ -82,11 +131,23 @@ public enum MethodType {
       return String
           .format(
               "public static java.util.Date %s(){ try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperties(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
-              escapedMethodName, "yyyy-MM-dd", keyName);
+              escapedMethodName, DATE_FORMAT, keyName);
 
+    }
+
+    @Override
+    public boolean isValid(String property) {
+      try {
+        new SimpleDateFormat(DATE_FORMAT).parse(property);
+        return true;
+      } catch (ParseException e) {
+        return false;
+      }
     }
   },
   TIMESTAMP {
+    private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     @Override
     public String getMethodKey() {
       return "_timestamp";
@@ -97,13 +158,25 @@ public enum MethodType {
       return String
           .format(
               "public static java.util.Date %s(){ try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperties(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
-              escapedMethodName, "yyyy-MM-dd HH:mm:ss", keyName);
+              escapedMethodName, TIMESTAMP_FORMAT, keyName);
+    }
+
+    @Override
+    public boolean isValid(String property) {
+      try {
+        new SimpleDateFormat(TIMESTAMP_FORMAT).parse(property);
+        return true;
+      } catch (ParseException e) {
+        return false;
+      }
     }
   };
 
   public abstract String getMethodKey();
 
   public abstract String toMethodString(String escapedMethodName, String keyName);
+
+  public abstract boolean isValid(String property);
 
   public static MethodType findMethodType(String key) {
     String[] split = key.split("\\.");
