@@ -1,4 +1,4 @@
-package org.mitoma.ponto;
+package in.tombo.ponto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

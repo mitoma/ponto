@@ -1,9 +1,9 @@
-package org.mitoma.ponto;
+package in.tombo.ponto;
 
 public @interface ConstantResource {
   public String[] value() default { "ponto.properties" };
 
-  public String packageName() default "org.mitoma.ponto";
+  public String packageName() default "in.tombo.ponto";
 
   public String className() default "PontoResource";
 

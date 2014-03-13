@@ -1,4 +1,5 @@
-package org.mitoma.ponto;
+package in.tombo.ponto;
+
 
 @ConstantResource
 public class PontoConfigDefault {

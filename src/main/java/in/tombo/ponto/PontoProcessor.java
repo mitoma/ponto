@@ -1,4 +1,4 @@
-package org.mitoma.ponto;
+package in.tombo.ponto;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +24,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedAnnotationTypes("org.mitoma.ponto.ConstantResource")
+@SupportedAnnotationTypes("in.tombo.ponto.ConstantResource")
 public class PontoProcessor extends AbstractProcessor {
 
   @Override

@@ -1,4 +1,4 @@
-package org.mitoma.ponto;
+package in.tombo.ponto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
