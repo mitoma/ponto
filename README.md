@@ -39,9 +39,9 @@ PontoResource.setting.key1();
 ```
   <dependencies>
   	<dependency>
-  		<groupId>org.mitoma.ponto</groupId>
-  		<artifactId>Ponto</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
+  		<groupId>in.tombo</groupId>
+  		<artifactId>ponto</artifactId>
+  		<version>1.0.0</version>
   		<scope>provided</scope>
   	</dependency>
   </dependencies>
@@ -73,7 +73,7 @@ public class PontoConfig {
 
 ### mvn compile する。
 
-target/generated-sources/annotations に org.mitoma.PontoResource というクラスファイルが生成される。
+target/generated-sources/annotations に in.tombo.ponto.PontoResource というクラスファイルが生成される。
 
 このクラスを使ってタイプセーフにプロパティファイルにアクセスじゃー！
 
@@ -87,7 +87,7 @@ target/generated-sources/annotations に org.mitoma.PontoResource というク�
  - default {"ponto.properties"}
 - packageName
  - String 自動生成されるクラスのパッケージを指定
- - default "org.mitoma.ponto"
+ - default "in.tombo.ponto"
 - className
  - String 自動生成されるクラスのクラス名を指定
  - default "PontoResource"
