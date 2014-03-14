@@ -40,9 +40,14 @@
       <id>sonatype-nexus-staging</id>
       <name>Nexus Release Repository</name>
       <uniqueVersion>false</uniqueVersion>
-      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/
-      </url>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshot</id>
+      <name>Nexus Release Repository</name>
+      <uniqueVersion>false</uniqueVersion>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
   </distributionManagement>
   <repositories>
     <repository>
@@ -62,6 +67,49 @@
           <target>1.7</target>
           <compilerArgument>-proc:none</compilerArgument>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <version>2.2.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>javadoc-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <charset>UTF-8</charset>
+          <show>public</show>
+        </configuration>
+        <version>2.9.1</version>
       </plugin>
     </plugins>
   </build>
