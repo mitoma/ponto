@@ -69,47 +69,27 @@ public class PontoProcessor extends AbstractProcessor {
 
     annotation.keyStyle().writeMethods(pw, properties);
 
-    pw.println("  private static java.util.Properties envProperties = new java.util.Properties();");
-    pw.println("  private static java.util.Properties properties = new java.util.Properties();");
-    pw.println("  static {");
-    pw.println("    try{");
-    for (String propFile : propFiles) {
-      pw.println(String.format("      loadProperties(\"%s\");", propFile));
-    }
-    pw.println("    } catch (java.io.IOException e) {");
-    pw.println("        throw new RuntimeException(\"Ponto initialize error.\", e);");
-    pw.println("    }");
-    pw.println("  }");
-    pw.println("  private static String getProperties(String key){");
-    pw.println("    if (envProperties.containsKey(key)) {");
-    pw.println("      return envProperties.getProperty(key);");
-    pw.println("    }");
-    pw.println("    return properties.getProperty(key);");
-    pw.println("  }");
     String envKey = annotation.envKey();
     String envDefault = annotation.envDefault();
-    pw.println("  private static void loadProperties(String propFile) throws java.io.IOException {");
-    pw.println("    ClassLoader loader = ClassLoader.getSystemClassLoader();");
-    pw.println("    boolean isXml = propFile.endsWith(\".xml\");");
+    pw.println("  private static String getEnvValue() {");
     pw.println("    String env = System.getenv(\"" + envKey + "\");");
-    pw.println("    if (env == null) {");
-    pw.println("      env = \"" + envDefault + "\";");
+    pw.println("    if (env != null) {");
+    pw.println("      return env;");
     pw.println("    }");
-    pw.println("    int lastIndex = propFile.lastIndexOf(\".\");");
-    pw.println("    String pre = propFile.substring(0, lastIndex);");
-    pw.println("    String post = propFile.substring(lastIndex, propFile.length());");
-    pw.println("    String envPropFile = String.format(\"%s_%s%s\", pre, env, post);");
-    pw.println("    if (isXml) {");
-    pw.println("      if (loader.getResourceAsStream(envPropFile) != null) {");
-    pw.println("        envProperties.loadFromXML(loader.getResourceAsStream(envPropFile));");
-    pw.println("      }");
-    pw.println("      properties.loadFromXML(loader.getResourceAsStream(propFile));");
-    pw.println("    } else {");
-    pw.println("      if (loader.getResourceAsStream(envPropFile) != null) {");
-    pw.println("        envProperties.load(loader.getResourceAsStream(envPropFile));");
-    pw.println("      }");
-    pw.println("      properties.load(loader.getResourceAsStream(propFile));");
-    pw.println("    }");
+    pw.println("    return \"" + envDefault + "\";");
+    pw.println("  }");
+    pw.println("  private static String[] propertyFilePaths = new String[] {");
+    for (String propFile : propFiles) {
+      pw.printf("    \"%s\",\n", propFile);
+    }
+    pw.println("  };");
+
+    pw.printf(
+        "  private static in.tombo.ponto.PropertiesService pService = new in.tombo.ponto.PropertiesService(\"%s.%s\", getEnvValue(), propertyFilePaths);\n",
+        packageName, className);
+
+    pw.println("  private static String getProperties(String key){");
+    pw.println("    return pService.getProperties(key);");
     pw.println("  }");
     pw.println("}");
     pw.flush();

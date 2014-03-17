@@ -12,6 +12,7 @@ public enum KeyStyle {
     @Override
     public void writeMethods(PrintWriter pw, Properties properties) {
       for (Object key : properties.keySet()) {
+        pw.println();
         String keyString = key.toString();
         MethodType type = MethodType.findMethodType(keyString);
         String methodName = keyString.replace('.', '_').replaceFirst(
@@ -35,6 +36,7 @@ public enum KeyStyle {
 
     private void writeNode(PrintWriter pw, Node node, int depth) {
       for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
+        pw.println();
         pw.print(indent(depth));
 
         String fullName = node.getFullName();
@@ -51,6 +53,7 @@ public enum KeyStyle {
             escapedMethodName(method.getKey()), keyName));
       }
       for (Node child : node.getChilds()) {
+        pw.println();
         pw.print(indent(depth));
         pw.println(String.format("public static class %s {", child.getName()));
         writeNode(pw, child, depth + 1);
