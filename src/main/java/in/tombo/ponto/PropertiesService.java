@@ -26,7 +26,7 @@ public class PropertiesService {
   }
 
   public String getProperties(String keyString) {
-    if (envProperties.contains(keyString)) {
+    if (envProperties.containsKey(keyString)) {
       logger.debug("get key env:{}, key:{}", envValue, keyString);
       return envProperties.getProperty(keyString);
     }
@@ -49,7 +49,7 @@ public class PropertiesService {
         String keyStr = (String) keyObj;
         String useProp;
         Properties p;
-        if (envProperties.contains(keyStr)) {
+        if (envProperties.containsKey(keyStr)) {
           useProp = envValue;
           p = envProperties;
         } else {
