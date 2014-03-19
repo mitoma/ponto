@@ -1,0 +1,17 @@
+# Release Script.
+
+# 1. Prepare
+
+mvn release:prepare
+
+# 2. Up to staging
+
+mvn -P release release:perform -Dgpg.passphrase=[secret] -Darguments="-Dgpg.passphrase=[secret]"
+
+# 3. Ship!
+
+# https://oss.sonotype.org/
+# select uploaded jar.
+# click close -> click release
+
+# have a nice day. :-)
