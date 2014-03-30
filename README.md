@@ -41,8 +41,7 @@ PontoResource.setting.key1();
   	<dependency>
   		<groupId>in.tombo</groupId>
   		<artifactId>ponto</artifactId>
-  		<version>1.0.0</version>
-  		<scope>provided</scope>
+  		<version>1.0.2</version>
   	</dependency>
   </dependencies>
 ```
