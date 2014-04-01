@@ -43,6 +43,7 @@ public class PontoProcessor extends AbstractProcessor {
     String[] propFiles = annotation.value();
     String packageName = annotation.packageName();
     String className = annotation.className();
+    long scanPereod = annotation.scanPeriod();
     Filer filer = processingEnv.getFiler();
     Properties properties = loadProperties(propFiles);
     List<String> errors = validation(properties);
@@ -79,8 +80,8 @@ public class PontoProcessor extends AbstractProcessor {
     pw.println("  };");
 
     pw.printf(
-        "  private static in.tombo.ponto.PropertiesService pService = new in.tombo.ponto.PropertiesService(\"%s.%s\", getEnvValue(), propertyFilePaths);\n",
-        packageName, className);
+        "  private static in.tombo.ponto.PropertiesService pService = new in.tombo.ponto.PropertiesService(\"%s.%s\", %d, getEnvValue(), propertyFilePaths);\n",
+        packageName, className, scanPereod);
 
     pw.println("  public static java.util.Properties getProperties() {");
     pw.println("    return pService.getProperties();");

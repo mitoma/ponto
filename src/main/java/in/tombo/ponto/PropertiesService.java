@@ -21,11 +21,15 @@ public class PropertiesService {
 
   private Properties properties;
   private Properties envProperties;
+  private long scanPeriod;
+  private long loadTime;
 
-  public PropertiesService(String loggerName, String envValue, String... filePaths) {
+  public PropertiesService(String loggerName, long scanPeriod, String envValue, String... filePaths) {
     this.logger = LoggerFactory.getLogger(loggerName);
     this.envValue = envValue;
     this.filePaths = filePaths;
+    this.scanPeriod = scanPeriod;
+    this.loadTime = 0L;
     loadProperties();
     loggingSettings();
   }
@@ -41,6 +45,10 @@ public class PropertiesService {
   }
 
   public String getProperty(String keyString) {
+    if (scanPeriod > 0 && scanPeriod < System.currentTimeMillis() - loadTime) {
+      loadProperties();
+      loggingSettings();
+    }
     if (envProperties.containsKey(keyString)) {
       logger.debug("get key env:{}, key:{}", envValue, keyString);
       return envProperties.getProperty(keyString);
@@ -49,7 +57,8 @@ public class PropertiesService {
     return properties.getProperty(keyString);
   }
 
-  private void loadProperties() {
+  private synchronized void loadProperties() {
+    loadTime = System.currentTimeMillis();
     envProperties = new Properties();
     properties = new Properties();
     for (String filePath : filePaths) {

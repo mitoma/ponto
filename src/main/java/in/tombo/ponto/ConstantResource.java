@@ -13,4 +13,5 @@ public @interface ConstantResource {
 
   public String envDefault() default "development";
 
+  public long scanPeriod() default -1L;
 }
