@@ -51,4 +51,18 @@ public class PontProcessorTest extends AptinaTestCase {
     assertTrue(source.contains("public class PontoResource {"));
     assertTrue(source.contains("public static int test_intkey_valid()"));
   }
+
+  public void test再読み込み設定() throws Exception {
+    PontoProcessor processor = new PontoProcessor();
+    addProcessor(processor);
+    addCompilationUnit(PontoConfigCase3.class);
+
+    compile();
+
+    String source = getGeneratedSource("in.tombo.ponto.PontoResource");
+
+    assertTrue(source.startsWith("package in.tombo.ponto;"));
+    assertTrue(source.contains("public class PontoResource {"));
+    assertTrue(source.contains(String.valueOf(Long.MAX_VALUE)));
+  }
 }

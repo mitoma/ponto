@@ -80,7 +80,7 @@ public class PontoProcessor extends AbstractProcessor {
     pw.println("  };");
 
     pw.printf(
-        "  private static in.tombo.ponto.PropertiesService pService = new in.tombo.ponto.PropertiesService(\"%s.%s\", %d, getEnvValue(), propertyFilePaths);\n",
+        "  private static in.tombo.ponto.PropertiesService pService = new in.tombo.ponto.PropertiesService(\"%s.%s\", %dL, getEnvValue(), propertyFilePaths);\n",
         packageName, className, scanPereod);
 
     pw.println("  public static java.util.Properties getProperties() {");
