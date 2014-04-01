@@ -80,22 +80,56 @@ target/generated-sources/annotations に in.tombo.ponto.PontoResource という�
 
 @ConstantResource に指定できる引数
 
-- value
- - String[] propertiesファイルを複数指定することができる。
- - .properties と .xml 形式の2つのプロパティファイルの書式に対応している。
- - default {"ponto.properties"}
-- packageName
- - String 自動生成されるクラスのパッケージを指定
- - default "in.tombo.ponto"
-- className
- - String 自動生成されるクラスのクラス名を指定
- - default "PontoResource"
-- keyStyle
- - KeyStyle アクセサのスタイルを選択できる。Hierarchical は PontoResource.setting.key1() のようにアクセスできる。 Flat は PontoResource.setting_key1() のようにアクセスできる。
- - default KeyStyle.Hierarchical
-- scanPeriod
- - long プロパティファイルをリロードするまでの時間をミリ秒単位で指定する。0以下指定時は再読み込みを行わない。
- - default -1
+<table>
+  <tr>
+    <th>パラメータ名</th>
+    <th>型</th>
+    <th>説明</th>
+    <th>デフォルト値</th>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>String[]</td>
+    <td>propertiesファイルを複数指定することができる。<br/>.properties と .xml 形式の2つのプロパティファイルの書式に対応している。</td>
+    <td>{"ponto.properties"}</td>
+  </tr>
+  <tr>
+    <td>packageName</td>
+    <td>String</td>
+    <td>自動生成されるクラスのパッケージを指定</td>
+    <td>"in.tombo.ponto"</td>
+  </tr>
+  <tr>
+    <td>className</td>
+    <td>String</td>
+    <td>自動生成されるクラスのクラス名を指定</td>
+    <td>"PontoResource"</td>
+  </tr>
+  <tr>
+    <td>keyStyle</td>
+    <td>KeyStyle</td>
+    <td>アクセサのスタイルを選択できる。<br/>Hierarchical は PontoResource.setting.key1() のようにアクセスできる。<br/>Flat は PontoResource.setting_key1() のようにアクセスできる。</td>
+    <td>KeyStyle.Hierarchical</td>
+  </tr>
+  <tr>
+    <td>envKey</td>
+    <td>String</td>
+    <td>上書きするプロパティファイルを決定する時の環境変数名を指定する。</td>
+    <td>PONTO_ENV</td>
+  </tr>
+  <tr>
+    <td>envDefault</td>
+    <td>String</td>
+    <td>上書きするプロパティファイルを決定するときの環境変数が存在しなかった場合のデフォルト値を指定する。</td>
+    <td>development</td>
+  </tr>
+  <tr>
+    <td>scanPeriod</td>
+    <td>long</td>
+    <td>プロパティファイルをリロードするまでの時間をミリ秒単位で指定する。<br/>0以下指定時は再読み込みを行わない。</td>
+    <td>-1L</td>
+  </tr>
+</table>
 
 ## ライセンス
 
