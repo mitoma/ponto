@@ -93,6 +93,9 @@ target/generated-sources/annotations に in.tombo.ponto.PontoResource という�
 - keyStyle
  - KeyStyle アクセサのスタイルを選択できる。Hierarchical は PontoResource.setting.key1() のようにアクセスできる。 Flat は PontoResource.setting_key1() のようにアクセスできる。
  - default KeyStyle.Hierarchical
+- scanPeriod
+ - long プロパティファイルをリロードするまでの時間をミリ秒単位で指定する。0以下指定時は再読み込みを行わない。
+ - default -1
 
 ## ライセンス
 
