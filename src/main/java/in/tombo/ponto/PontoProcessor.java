@@ -83,7 +83,7 @@ public class PontoProcessor extends AbstractProcessor {
         packageName, className);
 
     pw.println("  public static java.util.Properties getProperties() {");
-    pw.println("    return pService.getProperty(key);");
+    pw.println("    return pService.getProperties();");
     pw.println("  }");
     pw.println("  private static String getProperty(String key) {");
     pw.println("    return pService.getProperty(key);");
