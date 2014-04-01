@@ -8,21 +8,21 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PropertiesService {
-  private Logger     logger;
+  private Logger logger;
 
-  private String[]   filePaths;
-  private String     envValue;
+  private String[] filePaths;
+  private String envValue;
 
   private Properties properties;
   private Properties envProperties;
 
-  public PropertiesService(String loggerName, String envValue,
-      String... filePaths) {
+  public PropertiesService(String loggerName, String envValue, String... filePaths) {
     this.logger = LoggerFactory.getLogger(loggerName);
     this.envValue = envValue;
     this.filePaths = filePaths;
@@ -30,7 +30,17 @@ public class PropertiesService {
     loggingSettings();
   }
 
-  public String getProperties(String keyString) {
+  public Properties getProperties() {
+    Properties p = new Properties();
+    Set<Object> keys = properties.keySet();
+    for (Object keyObject : keys) {
+      String key = (String) keyObject;
+      p.setProperty(key, getProperty(key));
+    }
+    return p;
+  }
+
+  public String getProperty(String keyString) {
     if (envProperties.containsKey(keyString)) {
       logger.debug("get key env:{}, key:{}", envValue, keyString);
       return envProperties.getProperty(keyString);
@@ -61,8 +71,7 @@ public class PropertiesService {
           useProp = "default";
           p = properties;
         }
-        logger.info("\tenv:{}\tkey:{}\tvalue:{}", useProp, keyStr,
-            p.get(keyStr));
+        logger.info("\tenv:{}\tkey:{}\tvalue:{}", useProp, keyStr, p.get(keyStr));
       }
     }
   }
@@ -92,8 +101,7 @@ public class PropertiesService {
       }
     } catch (IOException e) {
       logger.error("properties file {} is not found.", filePath);
-      throw new RuntimeException(String.format(
-          "properties file %s is not found.", filePath));
+      throw new RuntimeException(String.format("properties file %s is not found.", filePath));
     }
   }
 
@@ -119,15 +127,13 @@ public class PropertiesService {
     return in;
   }
 
-  private FileInputStream getInputStreamFromFile(String filePath)
-      throws FileNotFoundException {
+  private FileInputStream getInputStreamFromFile(String filePath) throws FileNotFoundException {
     return new FileInputStream(filePath);
   }
 
-  private InputStream getInputStreamFromClassPath(String filePath)
-      throws IOException {
-    Enumeration<URL> resources = Thread.currentThread().getContextClassLoader()
-        .getResources(filePath);
+  private InputStream getInputStreamFromClassPath(String filePath) throws IOException {
+    Enumeration<URL> resources =
+        Thread.currentThread().getContextClassLoader().getResources(filePath);
     for (URL resource : Collections.list(resources)) {
       logger.info("Resource URL:{}", resource);
       if ("jar".equals(resource.getProtocol())) {

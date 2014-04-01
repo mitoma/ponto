@@ -15,11 +15,11 @@ public enum KeyStyle {
         pw.println();
         String keyString = key.toString();
         MethodType type = MethodType.findMethodType(keyString);
-        String methodName = keyString.replace('.', '_').replaceFirst(
-            String.format("_%s\\Z", type.getMethodKey()), "");
+        String methodName =
+            keyString.replace('.', '_').replaceFirst(String.format("_%s\\Z", type.getMethodKey()),
+                "");
         pw.print(indent(1));
-        pw.println(type
-            .toMethodString(escapedMethodName(methodName), keyString));
+        pw.println(type.toMethodString(escapedMethodName(methodName), keyString));
       }
     }
   },
@@ -45,12 +45,10 @@ public enum KeyStyle {
           keyName = String.format("%s.%s", fullName, method.getKey());
         }
         if (method.getValue() != MethodType.STRING) {
-          keyName = String.format("%s.%s", keyName, method.getValue()
-              .getMethodKey());
+          keyName = String.format("%s.%s", keyName, method.getValue().getMethodKey());
         }
 
-        pw.println(method.getValue().toMethodString(
-            escapedMethodName(method.getKey()), keyName));
+        pw.println(method.getValue().toMethodString(escapedMethodName(method.getKey()), keyName));
       }
       for (Node child : node.getChilds()) {
         pw.println();

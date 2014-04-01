@@ -25,10 +25,8 @@ import javax.tools.StandardLocation;
 public class PontoProcessor extends AbstractProcessor {
 
   @Override
-  public boolean process(Set<? extends TypeElement> annotations,
-      RoundEnvironment roundEnv) {
-    for (Element elem : roundEnv
-        .getElementsAnnotatedWith(ConstantResource.class)) {
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    for (Element elem : roundEnv.getElementsAnnotatedWith(ConstantResource.class)) {
       ConstantResource annotation = elem.getAnnotation(ConstantResource.class);
       Messager messager = processingEnv.getMessager();
       try {
@@ -56,8 +54,7 @@ public class PontoProcessor extends AbstractProcessor {
       throw new IllegalArgumentException("invalid propertie file.");
     }
 
-    JavaFileObject source = filer.createSourceFile(String.format("%s.%s",
-        packageName, className));
+    JavaFileObject source = filer.createSourceFile(String.format("%s.%s", packageName, className));
     PrintWriter pw = new PrintWriter(source.openOutputStream(), true);
     if (!packageName.isEmpty()) {
       pw.println(String.format("package %s;", packageName));
@@ -85,8 +82,11 @@ public class PontoProcessor extends AbstractProcessor {
         "  private static in.tombo.ponto.PropertiesService pService = new in.tombo.ponto.PropertiesService(\"%s.%s\", getEnvValue(), propertyFilePaths);\n",
         packageName, className);
 
-    pw.println("  private static String getProperties(String key){");
-    pw.println("    return pService.getProperties(key);");
+    pw.println("  public static java.util.Properties getProperties() {");
+    pw.println("    return pService.getProperty(key);");
+    pw.println("  }");
+    pw.println("  private static String getProperty(String key) {");
+    pw.println("    return pService.getProperty(key);");
     pw.println("  }");
     pw.println("}");
     pw.flush();
@@ -98,8 +98,8 @@ public class PontoProcessor extends AbstractProcessor {
     Properties properties = new Properties();
     Filer filer = processingEnv.getFiler();
     for (String propFile : propFiles) {
-      InputStream stream = filer.getResource(StandardLocation.CLASS_PATH, "",
-          propFile).openInputStream();
+      InputStream stream =
+          filer.getResource(StandardLocation.CLASS_PATH, "", propFile).openInputStream();
       if (propFile.endsWith(".xml")) {
         properties.loadFromXML(stream);
       } else {
@@ -116,9 +116,8 @@ public class PontoProcessor extends AbstractProcessor {
       MethodType methodType = MethodType.findMethodType(keyStr);
       String value = properties.getProperty(keyStr);
       if (!methodType.isValid(value)) {
-        errors.add(String.format(
-            "invalid key. type[%s], format[%s], value[%s]", methodType, keyStr,
-            value));
+        errors.add(String.format("invalid key. type[%s], format[%s], value[%s]", methodType,
+            keyStr, value));
       }
     }
     return errors;

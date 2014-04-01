@@ -8,10 +8,10 @@ import java.util.Map;
 
 public class Node {
 
-  private Node                    parent  = null;
-  private List<Node>              childs  = new ArrayList<>();
+  private Node parent = null;
+  private List<Node> childs = new ArrayList<>();
   private Map<String, MethodType> methods = new HashMap<>();
-  private String                  name;
+  private String name;
 
   public Node(Node parent, String name) {
     if (parent == null) {

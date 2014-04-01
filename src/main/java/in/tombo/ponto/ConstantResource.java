@@ -1,7 +1,7 @@
 package in.tombo.ponto;
 
 public @interface ConstantResource {
-  public String[] value() default { "ponto.properties" };
+  public String[] value() default {"ponto.properties"};
 
   public String packageName() default "in.tombo.ponto";
 

@@ -12,8 +12,7 @@ public enum MethodType {
 
     @Override
     public String toMethodString(String escapedMethodName, String keyName) {
-      return String.format(
-          "public static String %s(){ return getProperties(\"%s\"); }",
+      return String.format("public static String %s() { return getProperty(\"%s\"); }",
           escapedMethodName, keyName);
     }
 
@@ -30,10 +29,9 @@ public enum MethodType {
 
     @Override
     public String toMethodString(String escapedMethodName, String keyName) {
-      return String
-          .format(
-              "public static int %s(){ return Integer.valueOf(getProperties(\"%s\")); }",
-              escapedMethodName, keyName);
+      return String.format(
+          "public static int %s() { return Integer.valueOf(getProperty(\"%s\")); }",
+          escapedMethodName, keyName);
     }
 
     @Override
@@ -54,10 +52,8 @@ public enum MethodType {
 
     @Override
     public String toMethodString(String escapedMethodName, String keyName) {
-      return String
-          .format(
-              "public static long %s(){ return Long.valueOf(getProperties(\"%s\")); }",
-              escapedMethodName, keyName);
+      return String.format("public static long %s() { return Long.valueOf(getProperty(\"%s\")); }",
+          escapedMethodName, keyName);
     }
 
     @Override
@@ -78,10 +74,9 @@ public enum MethodType {
 
     @Override
     public String toMethodString(String escapedMethodName, String keyName) {
-      return String
-          .format(
-              "public static float %s(){ return Float.valueOf(getProperties(\"%s\")); }",
-              escapedMethodName, keyName);
+      return String.format(
+          "public static float %s() { return Float.valueOf(getProperty(\"%s\")); }",
+          escapedMethodName, keyName);
     }
 
     @Override
@@ -102,10 +97,9 @@ public enum MethodType {
 
     @Override
     public String toMethodString(String escapedMethodName, String keyName) {
-      return String
-          .format(
-              "public static double %s(){ return Double.valueOf(getProperties(\"%s\")); }",
-              escapedMethodName, keyName);
+      return String.format(
+          "public static double %s() { return Double.valueOf(getProperty(\"%s\")); }",
+          escapedMethodName, keyName);
     }
 
     @Override
@@ -130,7 +124,7 @@ public enum MethodType {
     public String toMethodString(String escapedMethodName, String keyName) {
       return String
           .format(
-              "public static java.util.Date %s(){ try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperties(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
+              "public static java.util.Date %s() { try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperty(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
               escapedMethodName, DATE_FORMAT, keyName);
 
     }
@@ -157,7 +151,7 @@ public enum MethodType {
     public String toMethodString(String escapedMethodName, String keyName) {
       return String
           .format(
-              "public static java.util.Date %s(){ try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperties(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
+              "public static java.util.Date %s() { try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperty(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
               escapedMethodName, TIMESTAMP_FORMAT, keyName);
     }
 
