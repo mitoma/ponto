@@ -112,6 +112,29 @@ public enum MethodType {
       }
     }
   },
+  BOOLEAN {
+    @Override
+    public String getMethodKey() {
+      return "_boolean";
+    }
+
+    @Override
+    public String toMethodString(String escapedMethodName, String keyName) {
+      StringBuilder buf = new StringBuilder();
+      buf.append("public static boolean %s() { ");
+      buf.append("String p = (getProperty(\"%s\")); ");
+      buf.append("if (\"true\".equalsIgnoreCase(p)) {return true;} ");
+      buf.append("if (\"false\".equalsIgnoreCase(p)) {return false;} ");
+      buf.append("throw new RuntimeException(\"%s is showuld be true or false.\"); ");
+      buf.append("}");
+      return String.format(buf.toString(), escapedMethodName, keyName, keyName);
+    }
+
+    @Override
+    public boolean isValid(String property) {
+      return ("true".equalsIgnoreCase(property) || "false".equalsIgnoreCase(property));
+    }
+  },
   DATE {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
