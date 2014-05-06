@@ -10,7 +10,7 @@ mvn -P release release:perform -Dgpg.passphrase=[secret] -Darguments="-Dgpg.pass
 
 # 3. Ship!
 
-# https://oss.sonotype.org/
+# https://oss.sonatype.org/
 # select uploaded jar.
 # click close -> click release
 
