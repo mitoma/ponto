@@ -41,7 +41,7 @@ PontoResource.setting.key1();
   	<dependency>
   		<groupId>in.tombo</groupId>
   		<artifactId>ponto</artifactId>
-  		<version>1.0.2</version>
+  		<version>1.0.4</version>
   	</dependency>
   </dependencies>
 ```
@@ -58,6 +58,7 @@ setting.key4._float=123.123
 setting.key5._double=123123.123123
 setting.key6._date=2014-01-01
 setting.key7._timestamp=2014-01-01 01:02:03
+setting.key8._boolean=true
 ```
 
 ### コンフィグファイルを作成し、アノテーションをつける。
