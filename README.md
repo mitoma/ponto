@@ -76,6 +76,17 @@ target/generated-sources/annotations に in.tombo.ponto.PontoResource という�
 
 このクラスを使ってタイプセーフにプロパティファイルにアクセスじゃー！
 
+## 環境毎のプロパティの切り替え
+
+開発時とプロダクションでは、プロパティファイルの値を切り替えたい場合があります。
+具体的にはDBの接続IPであるとか、ホスト名とかそういう情報です。
+PONTO では PONTO_ENV という環境変数の値で、読み込むプロパティファイルを上書きするプロパティファイルを設定することができます。
+
+例えば setting.properties を読み込んでいる時、 PONTO_ENV に develpment を指定して起動すると setting_development.properties も同時読み込みます。
+
+この時、プロパティの値はsetting_development.properties → setting_properties の順序で解決されます。
+
+
 ## アノテーションリファレンス
 
 @ConstantResource に指定できる引数
