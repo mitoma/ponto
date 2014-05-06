@@ -18,6 +18,8 @@ public enum KeyStyle {
         String methodName =
             keyString.replace('.', '_').replaceFirst(String.format("_%s\\Z", type.getMethodKey()),
                 "");
+
+        pw.println(commentString(keyString, properties.getProperty(keyString), 1));
         pw.print(indent(1));
         pw.println(type.toMethodString(escapedMethodName(methodName), keyString));
       }
@@ -31,13 +33,11 @@ public enum KeyStyle {
         String keyString = key.toString();
         root.addKeyString(keyString);
       }
-      writeNode(pw, root, 1);
+      writeNode(pw, root, 1, properties);
     }
 
-    private void writeNode(PrintWriter pw, Node node, int depth) {
+    private void writeNode(PrintWriter pw, Node node, int depth, Properties properties) {
       for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
-        pw.println();
-        pw.print(indent(depth));
 
         String fullName = node.getFullName();
         String keyName = method.getKey();
@@ -48,13 +48,16 @@ public enum KeyStyle {
           keyName = String.format("%s.%s", keyName, method.getValue().getMethodKey());
         }
 
+        pw.println();
+        pw.println(commentString(keyName, properties.getProperty(keyName), depth));
+        pw.print(indent(depth));
         pw.println(method.getValue().toMethodString(escapedMethodName(method.getKey()), keyName));
       }
       for (Node child : node.getChilds()) {
         pw.println();
         pw.print(indent(depth));
         pw.println(String.format("public static class %s {", child.getName()));
-        writeNode(pw, child, depth + 1);
+        writeNode(pw, child, depth + 1, properties);
         pw.print(indent(depth));
         pw.println("}");
       }
@@ -62,8 +65,25 @@ public enum KeyStyle {
 
   };
 
+  public static final String commentTemplate = ""//
+      + "----indent----/**\n"//
+      + "----indent---- * Key<br/>\n"//
+      + "----indent---- * <pre>%s</pre><br/>\n"//
+      + "----indent---- * Value<br/>\n"//
+      + "----indent---- * <pre>%s</pre>\n"//
+      + "----indent---- */";
+
+  public static String commentString(String key, String value, int depth) {
+    return String.format(commentTemplate.replaceAll("----indent----", indent(depth)), key, value);
+  }
+
   public abstract void writeMethods(PrintWriter pw, Properties properties);
 
+  /**
+   * 
+   * @param methodName
+   * @return
+   */
   private static String escapedMethodName(String methodName) {
     if (!SourceVersion.isName(methodName)) {
       return "_" + methodName;
