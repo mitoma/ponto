@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -24,12 +25,16 @@ public class PropertiesService {
   private long scanPeriod;
   private long loadTime;
 
-  public PropertiesService(String loggerName, long scanPeriod, String envValue, String... filePaths) {
+  private String encoding;
+
+  public PropertiesService(String loggerName, long scanPeriod, String envValue, String encoding,
+      String... filePaths) {
     this.logger = LoggerFactory.getLogger(loggerName);
     this.envValue = envValue;
     this.filePaths = filePaths;
     this.scanPeriod = scanPeriod;
     this.loadTime = 0L;
+    this.encoding = encoding;
     loadProperties();
     loggingSettings();
   }
@@ -100,12 +105,12 @@ public class PropertiesService {
         logger.info("properties file {} is loaded.", filePath);
       } else {
         try {
-          envProperties.load(getInputStream(envFilePath));
+          envProperties.load(new InputStreamReader(getInputStream(envFilePath), encoding));
           logger.info("properties file {} is loaded.", envFilePath);
         } catch (IOException e) {
           logger.info("env properties file {} is not found.", envFilePath);
         }
-        properties.load(getInputStream(filePath));
+        properties.load(new InputStreamReader(getInputStream(filePath), encoding));
         logger.info("properties file {} is loaded.", filePath);
       }
     } catch (IOException e) {
