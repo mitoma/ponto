@@ -13,5 +13,7 @@ public @interface ConstantResource {
 
   public String envDefault() default "development";
 
+  public String encoding() default "UTF-8";
+
   public long scanPeriod() default -1L;
 }
