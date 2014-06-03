@@ -56,7 +56,7 @@ public enum KeyStyle {
       for (Node child : node.getChilds()) {
         pw.println();
         pw.print(indent(depth));
-        pw.println(String.format("public static class %s {", child.getName()));
+        pw.println(String.format("public static class %s {", escapedClassName(child.getName())));
         writeNode(pw, child, depth + 1, properties);
         pw.print(indent(depth));
         pw.println("}");
@@ -80,15 +80,26 @@ public enum KeyStyle {
   public abstract void writeMethods(PrintWriter pw, Properties properties);
 
   /**
-   * 
    * @param methodName
    * @return
    */
   private static String escapedMethodName(String methodName) {
-    if (!SourceVersion.isName(methodName)) {
-      return "_" + methodName;
+    return escapedName(methodName);
+  }
+
+  /**
+   * @param className
+   * @return
+   */
+  private static String escapedClassName(String className) {
+    return escapedName(className);
+  }
+
+  private static String escapedName(String name) {
+    if (!SourceVersion.isName(name)) {
+      return "_" + name;
     }
-    return methodName;
+    return name;
   }
 
   private static String indent(int depth) {
