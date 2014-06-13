@@ -93,4 +93,19 @@ public class PontProcessorTest extends AptinaTestCase {
     assertTrue(source.contains("public class PontoResource {"));
     assertTrue(source.contains("public static class _import {"));
   }
+
+  public void testBeanスタイルのテスト() throws Exception {
+    PontoProcessor processor = new PontoProcessor();
+    addProcessor(processor);
+    addCompilationUnit(PontoConfigCase6.class);
+
+    compile();
+
+    String source = getGeneratedSource("in.tombo.ponto.PontoResource");
+
+    assertTrue(source.startsWith("package in.tombo.ponto;"));
+    assertTrue(source.contains("public class PontoResource {"));
+    assertTrue(source.contains("public intkey getIntkey()"));
+    assertTrue(source.contains("public int getValid()"));
+  }
 }
