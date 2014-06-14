@@ -79,4 +79,18 @@ public class PontProcessorTest extends AptinaTestCase {
     assertTrue(source.contains("public class PontoResource {"));
     assertTrue(source.contains("Windows-31J"));
   }
+
+  public void test予約語がクラス名に入ると落ちる() throws Exception {
+    PontoProcessor processor = new PontoProcessor();
+    addProcessor(processor);
+    addCompilationUnit(PontoConfigCase5.class);
+
+    compile();
+
+    String source = getGeneratedSource("in.tombo.ponto.PontoResource");
+
+    assertTrue(source.startsWith("package in.tombo.ponto;"));
+    assertTrue(source.contains("public class PontoResource {"));
+    assertTrue(source.contains("public static class _import {"));
+  }
 }
