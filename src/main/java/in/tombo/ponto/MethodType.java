@@ -11,9 +11,9 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       return String.format("%s String %s() { return getProperty(\"%s\"); }",
-          modifire, escapedMethodName, keyName);
+          modifier, escapedMethodName, keyName);
     }
 
     @Override
@@ -28,10 +28,10 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       return String.format(
           "%s int %s() { return Integer.valueOf(getProperty(\"%s\")); }",
-          modifire, escapedMethodName, keyName);
+          modifier, escapedMethodName, keyName);
     }
 
     @Override
@@ -51,9 +51,9 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       return String.format("%s long %s() { return Long.valueOf(getProperty(\"%s\")); }",
-          modifire, escapedMethodName, keyName);
+          modifier, escapedMethodName, keyName);
     }
 
     @Override
@@ -73,10 +73,10 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       return String.format(
           "%s float %s() { return Float.valueOf(getProperty(\"%s\")); }",
-          modifire, escapedMethodName, keyName);
+          modifier, escapedMethodName, keyName);
     }
 
     @Override
@@ -96,10 +96,10 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       return String.format(
           "%s double %s() { return Double.valueOf(getProperty(\"%s\")); }",
-          modifire, escapedMethodName, keyName);
+          modifier, escapedMethodName, keyName);
     }
 
     @Override
@@ -119,7 +119,7 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       StringBuilder buf = new StringBuilder();
       buf.append("%s boolean %s() { ");
       buf.append("String p = (getProperty(\"%s\")); ");
@@ -127,7 +127,7 @@ public enum MethodType {
       buf.append("if (\"false\".equalsIgnoreCase(p)) {return false;} ");
       buf.append("throw new RuntimeException(\"%s is showuld be true or false.\"); ");
       buf.append("}");
-      return String.format(buf.toString(), modifire, escapedMethodName, keyName, keyName);
+      return String.format(buf.toString(), modifier, escapedMethodName, keyName, keyName);
     }
 
     @Override
@@ -144,11 +144,11 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       return String
           .format(
               "%s java.util.Date %s() { try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperty(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
-              modifire, escapedMethodName, DATE_FORMAT, keyName);
+              modifier, escapedMethodName, DATE_FORMAT, keyName);
 
     }
 
@@ -171,11 +171,11 @@ public enum MethodType {
     }
 
     @Override
-    public String toMethodString(String modifire, String escapedMethodName, String keyName) {
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
       return String
           .format(
               "%s java.util.Date %s() { try { return new java.text.SimpleDateFormat(\"%s\").parse(getProperty(\"%s\")); } catch (Exception e) { throw new RuntimeException(e); } }",
-              modifire, escapedMethodName, TIMESTAMP_FORMAT, keyName);
+              modifier, escapedMethodName, TIMESTAMP_FORMAT, keyName);
     }
 
     @Override
@@ -191,7 +191,7 @@ public enum MethodType {
 
   public abstract String getMethodKey();
 
-  public abstract String toMethodString(String modifire, String escapedMethodName, String keyName);
+  public abstract String toMethodString(String modifier, String escapedMethodName, String keyName);
 
   public abstract boolean isValid(String property);
 
