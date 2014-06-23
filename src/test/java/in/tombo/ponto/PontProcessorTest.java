@@ -107,5 +107,6 @@ public class PontProcessorTest extends AptinaTestCase {
     assertTrue(source.contains("public class PontoResource {"));
     assertTrue(source.contains("public intkey getIntkey()"));
     assertTrue(source.contains("public int getValid()"));
+    assertTrue(source.contains("public boolean isValid()"));
   }
 }

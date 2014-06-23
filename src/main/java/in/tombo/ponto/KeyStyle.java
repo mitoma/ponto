@@ -1,9 +1,11 @@
 package in.tombo.ponto;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.lang.model.SourceVersion;
 
@@ -16,13 +18,14 @@ public enum KeyStyle {
         pw.println();
         String keyString = key.toString();
         MethodType type = MethodType.findMethodType(keyString);
-        String methodName =
-            keyString.replace('.', '_').replaceFirst(String.format("_%s\\Z", type.getMethodKey()),
-                "");
+        String methodName = keyString.replace('.', '_').replaceFirst(
+            String.format("_%s\\Z", type.getMethodKey()), "");
 
-        pw.println(commentString(keyString, properties.getProperty(keyString), 1));
+        pw.println(commentString(keyString, properties.getProperty(keyString),
+            1));
         pw.print(indent(1));
-        pw.println(type.toMethodString("public static", escapedMethodName(methodName), keyString));
+        pw.println(type.toMethodString("public static",
+            escapedMethodName(methodName), keyString));
       }
     }
   },
@@ -37,7 +40,8 @@ public enum KeyStyle {
       writeNode(pw, root, 1, properties);
     }
 
-    private void writeNode(PrintWriter pw, Node node, int depth, Properties properties) {
+    private void writeNode(PrintWriter pw, Node node, int depth,
+        Properties properties) {
       for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
 
         String fullName = node.getFullName();
@@ -46,18 +50,22 @@ public enum KeyStyle {
           keyName = String.format("%s.%s", fullName, method.getKey());
         }
         if (method.getValue() != MethodType.STRING) {
-          keyName = String.format("%s.%s", keyName, method.getValue().getMethodKey());
+          keyName = String.format("%s.%s", keyName, method.getValue()
+              .getMethodKey());
         }
 
         pw.println();
-        pw.println(commentString(keyName, properties.getProperty(keyName), depth));
+        pw.println(commentString(keyName, properties.getProperty(keyName),
+            depth));
         pw.print(indent(depth));
-        pw.println(method.getValue().toMethodString("public static", escapedMethodName(method.getKey()), keyName));
+        pw.println(method.getValue().toMethodString("public static",
+            escapedMethodName(method.getKey()), keyName));
       }
       for (Node child : node.getChilds()) {
         pw.println();
         pw.print(indent(depth));
-        pw.println(String.format("public static class %s {", escapedClassName(child.getName())));
+        pw.println(String.format("public static class %s {",
+            escapedClassName(child.getName())));
         writeNode(pw, child, depth + 1, properties);
         pw.print(indent(depth));
         pw.println("}");
@@ -76,7 +84,8 @@ public enum KeyStyle {
       writeNode(pw, root, 1, properties);
     }
 
-    private void writeNode(PrintWriter pw, Node node, int depth, Properties properties) {
+    private void writeNode(PrintWriter pw, Node node, int depth,
+        Properties properties) {
       for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
 
         String fullName = node.getFullName();
@@ -85,22 +94,28 @@ public enum KeyStyle {
           keyName = String.format("%s.%s", fullName, method.getKey());
         }
         if (method.getValue() != MethodType.STRING) {
-          keyName = String.format("%s.%s", keyName, method.getValue().getMethodKey());
+          keyName = String.format("%s.%s", keyName, method.getValue()
+              .getMethodKey());
         }
 
         pw.println();
-        pw.println(commentString(keyName, properties.getProperty(keyName), depth));
+        pw.println(commentString(keyName, properties.getProperty(keyName),
+            depth));
         pw.print(indent(depth));
-        pw.println(method.getValue().toMethodString("public", beanGetterName(method.getKey()), keyName));
+        pw.println(method.getValue().toMethodString("public",
+            beanGetterName(method.getKey(), method.getValue()), keyName));
       }
       for (Node child : node.getChilds()) {
         String childName = child.getName();
         pw.println();
         pw.print(indent(depth));
-        pw.println(String.format("public %s %s() { return new %s(); }", escapedClassName(childName), beanGetterName(childName), escapedClassName(childName)));
+        pw.println(String.format("public %s %s() { return new %s(); }",
+            escapedClassName(childName), beanGetterName(childName),
+            escapedClassName(childName)));
         pw.println();
         pw.print(indent(depth));
-        pw.println(String.format("private static class %s {", escapedClassName(childName)));
+        pw.println(String.format("private static class %s {",
+            escapedClassName(childName)));
         writeNode(pw, child, depth + 1, properties);
         pw.print(indent(depth));
         pw.println("}");
@@ -118,7 +133,9 @@ public enum KeyStyle {
       + "----indent---- */";
 
   public static String commentString(String key, String value, int depth) {
-    return String.format(commentTemplate.replaceAll("----indent----", indent(depth)), key, value);
+    return String
+        .format(commentTemplate.replaceAll("----indent----", indent(depth)),
+            key, value);
   }
 
   public abstract void writeMethods(PrintWriter pw, Properties properties);
@@ -146,17 +163,30 @@ public enum KeyStyle {
     return name;
   }
 
-  private static final Pattern upperCamelConvertionPattern = Pattern.compile("\\A.[a-z].*");
-  
+  private static final Pattern upperCamelConvertionPattern = Pattern
+      .compile("\\A.[a-z].*");
+
   /**
    * @param methodName
    * @return
    */
   private static String beanGetterName(String propertyName) {
+    return beanGetterName(propertyName, null);
+  }
+
+  /**
+   * @param methodName
+   * @param methodType
+   * @return
+   */
+  private static String beanGetterName(String propertyName,
+      MethodType methodType) {
     if (upperCamelConvertionPattern.matcher(propertyName).matches()) {
-      propertyName = propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+      propertyName = propertyName.substring(0, 1).toUpperCase()
+          + propertyName.substring(1);
     }
-    return "get" + propertyName;
+    String prefix = methodType == MethodType.BOOLEAN ? "is" : "get";
+    return prefix + propertyName;
   }
 
   private static String indent(int depth) {
