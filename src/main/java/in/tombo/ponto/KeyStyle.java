@@ -1,10 +1,11 @@
 package in.tombo.ponto;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.lang.model.SourceVersion;
@@ -69,6 +70,29 @@ public enum KeyStyle {
   },
   Bean {
     @Override
+    public void validateProperties(List<String> errors, Properties properties) {
+      Node root = new Node(null, "");
+      for (Object key : properties.keySet()) {
+        String keyString = key.toString();
+        root.addKeyString(keyString);
+      }
+      validateNode(errors, root);
+    }
+
+    private void validateNode(List<String> errors, Node node) {
+      Set<String> parentKeys = new HashSet<>();
+      for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
+        parentKeys.add(method.getKey());
+      }
+      for (Node child : node.getChilds()) {
+        if (parentKeys.contains(child.getName())) {
+          errors.add(String.format("If using Bean Style, can not assign a value to the parent key [%s].", child.getFullName()));
+        }
+        validateNode(errors, child);
+      }
+    }
+
+    @Override
     public void writeMethods(PrintWriter pw, Properties properties) {
       Node root = new Node(null, "");
       for (Object key : properties.keySet()) {
@@ -80,7 +104,6 @@ public enum KeyStyle {
 
     private void writeNode(PrintWriter pw, Node node, int depth, Properties properties) {
       for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
-
         String fullName = node.getFullName();
         String keyName = method.getKey();
         if (!fullName.isEmpty()) {
@@ -89,7 +112,6 @@ public enum KeyStyle {
         if (method.getValue() != MethodType.STRING) {
           keyName = String.format("%s.%s", keyName, method.getValue().getMethodKey());
         }
-
         pw.println();
         pw.println(commentString(keyName, properties.getProperty(keyName), depth));
         pw.print(indent(depth));
@@ -111,6 +133,13 @@ public enum KeyStyle {
 
   };
 
+  /**
+   * 
+   * @param errors
+   * @param properties
+   */
+  public void validateProperties(List<String> errors, Properties properties) {}
+  
   public static final String commentTemplate = ""//
       + "----indent----/**\n"//
       + "----indent---- * Key<br/>\n"//

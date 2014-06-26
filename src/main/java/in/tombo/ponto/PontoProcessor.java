@@ -48,6 +48,7 @@ public class PontoProcessor extends AbstractProcessor {
     Filer filer = processingEnv.getFiler();
     Properties properties = loadProperties(propFiles);
     List<String> errors = validation(properties);
+    annotation.keyStyle().validateProperties(errors, properties);
     if (!errors.isEmpty()) {
       Messager messager = processingEnv.getMessager();
       for (String err : errors) {

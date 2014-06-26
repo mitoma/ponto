@@ -1,6 +1,7 @@
 package in.tombo.ponto;
 
 import org.seasar.aptina.unit.AptinaTestCase;
+import org.seasar.aptina.unit.SourceNotGeneratedException;
 
 public class PontProcessorTest extends AptinaTestCase {
 
@@ -108,5 +109,19 @@ public class PontProcessorTest extends AptinaTestCase {
     assertTrue(source.contains("public intkey getIntkey()"));
     assertTrue(source.contains("public int getValid()"));
     assertTrue(source.contains("public boolean isValid()"));
+  }
+
+  public void testBeanスタイルでは親キーに値を設定すると落ちる() throws Exception {
+    PontoProcessor processor = new PontoProcessor();
+    addProcessor(processor);
+    addCompilationUnit(PontoConfigCase7.class);
+
+    compile();
+
+    try{
+      getGeneratedSource("in.tombo.ponto.PontoResource");
+      fail("SourceNotGeneratedException is expected");
+    } catch (SourceNotGeneratedException e) {
+    }
   }
 }
