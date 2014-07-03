@@ -1,9 +1,13 @@
 package in.tombo.ponto;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.lang.model.SourceVersion;
 
@@ -67,6 +71,29 @@ public enum KeyStyle {
   },
   Bean {
     @Override
+    public void validateProperties(List<String> errors, Properties properties) {
+      Node root = new Node(null, "");
+      for (Object key : properties.keySet()) {
+        String keyString = key.toString();
+        root.addKeyString(keyString);
+      }
+      validateNode(errors, root);
+    }
+
+    private void validateNode(List<String> errors, Node node) {
+      Set<String> parentKeys = new HashSet<>();
+      for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
+        parentKeys.add(method.getKey());
+      }
+      for (Node child : node.getChilds()) {
+        if (parentKeys.contains(child.getName())) {
+          errors.add(String.format("If using Bean Style, can not assign a value to the parent key [%s].", child.getFullName()));
+        }
+        validateNode(errors, child);
+      }
+    }
+
+    @Override
     public void writeMethods(PrintWriter pw, Properties properties) {
       Node root = new Node(null, "");
       for (Object key : properties.keySet()) {
@@ -78,7 +105,6 @@ public enum KeyStyle {
 
     private void writeNode(PrintWriter pw, Node node, int depth, Properties properties) {
       for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
-
         String fullName = node.getFullName();
         String keyName = method.getKey();
         if (!fullName.isEmpty()) {
@@ -87,11 +113,10 @@ public enum KeyStyle {
         if (method.getValue() != MethodType.STRING) {
           keyName = String.format("%s.%s", keyName, method.getValue().getMethodKey());
         }
-
         pw.println();
         pw.println(commentString(keyName, properties.getProperty(keyName), depth));
         pw.print(indent(depth));
-        pw.println(method.getValue().toMethodString("public", beanGetterName(method.getKey()), keyName));
+        pw.println(method.getValue().toMethodString("public", beanGetterName(method.getKey(), method.getValue()), keyName));
       }
       for (Node child : node.getChilds()) {
         String childName = child.getName();
@@ -109,6 +134,13 @@ public enum KeyStyle {
 
   };
 
+  /**
+   * 
+   * @param errors
+   * @param properties
+   */
+  public void validateProperties(List<String> errors, Properties properties) {}
+  
   public static final String commentTemplate = ""//
       + "----indent----/**\n"//
       + "----indent---- * Key<br/>\n"//
@@ -147,16 +179,32 @@ public enum KeyStyle {
   }
 
   private static final Pattern upperCamelConvertionPattern = Pattern.compile("\\A.[a-z].*");
-  
+  private static final Pattern snakeToCamelPattern = Pattern.compile("_([a-zA-Z])");
+
   /**
    * @param methodName
    * @return
    */
   private static String beanGetterName(String propertyName) {
+    return beanGetterName(propertyName, null);
+  }
+
+  /**
+   * @param methodName
+   * @param methodType
+   * @return
+   */
+  private static String beanGetterName(String propertyName, MethodType methodType) {
     if (upperCamelConvertionPattern.matcher(propertyName).matches()) {
       propertyName = propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
     }
-    return "get" + propertyName;
+    Matcher m;
+    while ((m = snakeToCamelPattern.matcher(propertyName)).find()) {
+      String group = m.group(1);
+      propertyName = propertyName.replace("_" + group, group.toUpperCase());
+    }
+    String prefix = methodType == MethodType.BOOLEAN ? "is" : "get";
+    return prefix + propertyName;
   }
 
   private static String indent(int depth) {
