@@ -178,7 +178,7 @@ public enum KeyStyle {
   }
 
   private static final Pattern upperCamelConvertionPattern = Pattern.compile("\\A.[a-z].*");
-  
+  private static final Pattern snakeToCamelPattern = Pattern.compile("_([a-zA-Z])");
 
   /**
    * @param methodName
@@ -196,6 +196,11 @@ public enum KeyStyle {
   private static String beanGetterName(String propertyName, MethodType methodType) {
     if (upperCamelConvertionPattern.matcher(propertyName).matches()) {
       propertyName = propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+    }
+    Matcher m;
+    while ((m = snakeToCamelPattern.matcher(propertyName)).find()) {
+      String group = m.group(1);
+      propertyName = propertyName.replace("_" + group, group.toUpperCase());
     }
     String prefix = methodType == MethodType.BOOLEAN ? "is" : "get";
     return prefix + propertyName;
