@@ -125,7 +125,7 @@ public enum KeyStyle {
         pw.println(String.format("public %s %s() { return new %s(); }", escapedClassName(childName), beanGetterName(childName), escapedClassName(childName)));
         pw.println();
         pw.print(indent(depth));
-        pw.println(String.format("private static class %s {", escapedClassName(childName)));
+        pw.println(String.format("public static class %s {", escapedClassName(childName)));
         writeNode(pw, child, depth + 1, properties);
         pw.print(indent(depth));
         pw.println("}");
