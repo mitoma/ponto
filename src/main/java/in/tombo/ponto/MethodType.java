@@ -2,6 +2,7 @@ package in.tombo.ponto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.regex.Pattern;
 
 public enum MethodType {
   STRING {
@@ -19,6 +20,28 @@ public enum MethodType {
     @Override
     public boolean isValid(String property) {
       return true;
+    }
+  },
+  REGEXP {
+    @Override
+    public String getMethodKey() {
+      return "_regexp";
+    }
+
+    @Override
+    public String toMethodString(String modifier, String escapedMethodName, String keyName) {
+      return String.format("%s java.util.regex.Pattern %s() { return java.util.regex.Pattern.compile(getProperty(\"%s\")); }",
+          modifier, escapedMethodName, keyName);
+    }
+
+    @Override
+    public boolean isValid(String property) {
+      try{
+        Pattern.compile(property);
+        return true;
+      } catch (Exception e) {
+        return false;
+      }
     }
   },
   INTEGER {

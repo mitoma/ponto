@@ -17,6 +17,7 @@ public class PontProcessorTest extends AptinaTestCase {
     addCompilationUnit(PontoConfigDefault.class);
 
     compile();
+    assertTrue(getCompiledResult());
 
     String source = getGeneratedSource("in.tombo.ponto.PontoResource");
 
@@ -25,12 +26,28 @@ public class PontProcessorTest extends AptinaTestCase {
     assertTrue(source.contains("public static int valid()"));
   }
 
+  public void test正規表現のパターン() throws Exception {
+    PontoProcessor processor = new PontoProcessor();
+    addProcessor(processor);
+    addCompilationUnit(PontoConfigDefault.class);
+
+    compile();
+    assertTrue(getCompiledResult());
+
+    String source = getGeneratedSource("in.tombo.ponto.PontoResource");
+
+    assertTrue(source.startsWith("package in.tombo.ponto;"));
+    assertTrue(source.contains("public class PontoResource {"));
+    assertTrue(source.contains("public static java.util.regex.Pattern valid()"));
+  }
+
   public void testパッケージ名とクラス名をデフォルトから変えても動く() throws Exception {
     PontoProcessor processor = new PontoProcessor();
     addProcessor(processor);
     addCompilationUnit(PontoConfigCase1.class);
 
     compile();
+    assertTrue(getCompiledResult());
 
     String source = getGeneratedSource("com.example.TestResource");
 
@@ -45,6 +62,7 @@ public class PontProcessorTest extends AptinaTestCase {
     addCompilationUnit(PontoConfigCase2.class);
 
     compile();
+    assertTrue(getCompiledResult());
 
     String source = getGeneratedSource("in.tombo.ponto.PontoResource");
 
@@ -59,6 +77,7 @@ public class PontProcessorTest extends AptinaTestCase {
     addCompilationUnit(PontoConfigCase3.class);
 
     compile();
+    assertTrue(getCompiledResult());
 
     String source = getGeneratedSource("in.tombo.ponto.PontoResource");
 
@@ -73,6 +92,7 @@ public class PontProcessorTest extends AptinaTestCase {
     addCompilationUnit(PontoConfigCase4.class);
 
     compile();
+    assertTrue(getCompiledResult());
 
     String source = getGeneratedSource("in.tombo.ponto.PontoResource");
 
@@ -87,6 +107,7 @@ public class PontProcessorTest extends AptinaTestCase {
     addCompilationUnit(PontoConfigCase5.class);
 
     compile();
+    assertTrue(getCompiledResult());
 
     String source = getGeneratedSource("in.tombo.ponto.PontoResource");
 
@@ -101,6 +122,7 @@ public class PontProcessorTest extends AptinaTestCase {
     addCompilationUnit(PontoConfigCase6.class);
 
     compile();
+    assertTrue(getCompiledResult());
 
     String source = getGeneratedSource("in.tombo.ponto.PontoResource");
 
@@ -117,8 +139,9 @@ public class PontProcessorTest extends AptinaTestCase {
     addCompilationUnit(PontoConfigCase7.class);
 
     compile();
+    assertFalse(getCompiledResult());
 
-    try{
+    try {
       getGeneratedSource("in.tombo.ponto.PontoResource");
       fail("SourceNotGeneratedException is expected");
     } catch (SourceNotGeneratedException e) {
