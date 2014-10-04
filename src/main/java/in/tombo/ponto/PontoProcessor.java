@@ -69,7 +69,11 @@ public class PontoProcessor extends AbstractProcessor {
     String envKey = annotation.envKey();
     String envDefault = annotation.envDefault();
     pw.println("  private static String getEnvValue() {");
-    pw.println("    String env = System.getenv(\"" + envKey + "\");");
+    pw.println("    String env = System.getProperty(\"" + envKey + "\");");
+    pw.println("    if (env != null) {");
+    pw.println("      return env;");
+    pw.println("    }");
+    pw.println("    env = System.getenv(\"" + envKey + "\");");
     pw.println("    if (env != null) {");
     pw.println("      return env;");
     pw.println("    }");
