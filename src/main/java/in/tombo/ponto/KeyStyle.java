@@ -134,11 +134,6 @@ public enum KeyStyle {
 
   };
 
-  /**
-   * 
-   * @param errors
-   * @param properties
-   */
   public void validateProperties(List<String> errors, Properties properties) {}
   
   public static final String commentTemplate = ""//
