@@ -2,6 +2,7 @@ package in.tombo.ponto;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
@@ -58,7 +59,7 @@ public class PontoProcessor extends AbstractProcessor {
     }
 
     JavaFileObject source = filer.createSourceFile(String.format("%s.%s", packageName, className));
-    PrintWriter pw = new PrintWriter(source.openOutputStream(), true);
+    PrintWriter pw = new PrintWriter(new OutputStreamWriter(source.openOutputStream(), encoding), true);
     if (!packageName.isEmpty()) {
       pw.println(String.format("package %s;", packageName));
     }
