@@ -1,4 +1,4 @@
-# Ponto [![Build Status](https://buildhive.cloudbees.com/job/mitoma/job/ponto/badge/icon)](https://buildhive.cloudbees.com/job/mitoma/job/ponto/)
+# Ponto [![Build Status](https://travis-ci.org/mitoma/ponto.svg)](https://travis-ci.org/mitoma/ponto)
 
 Pontoはタイプセーフなプロパティファイルへのアクセサを生成するライブラリです。
 

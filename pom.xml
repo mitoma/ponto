@@ -64,8 +64,8 @@
         <version>2.3.2</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <compilerArgument>-proc:none</compilerArgument>
         </configuration>
       </plugin>
@@ -104,12 +104,12 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.6</version>
+      <version>1.7.9</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.6</version>
+      <version>1.7.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
