@@ -138,9 +138,9 @@ public enum KeyStyle {
   
   public static final String commentTemplate = ""//
       + "----indent----/**\n"//
-      + "----indent---- * Key<br/>\n"//
-      + "----indent---- * <pre>%s</pre><br/>\n"//
-      + "----indent---- * Value<br/>\n"//
+      + "----indent---- * Key<br>\n"//
+      + "----indent---- * <pre>%s</pre><br>\n"//
+      + "----indent---- * Value<br>\n"//
       + "----indent---- * <pre>%s</pre>\n"//
       + "----indent---- */";
 
