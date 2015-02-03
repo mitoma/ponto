@@ -37,20 +37,14 @@
     <url>https://github.com/mitoma/ponto/issues</url>
   </issueManagement>
   <distributionManagement>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <name>Nexus Release Repository</name>
-      <uniqueVersion>false</uniqueVersion>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-<!--
     <snapshotRepository>
-      <id>sonatype-nexus-snapshot</id>
-      <name>Nexus Release Repository</name>
-      <uniqueVersion>false</uniqueVersion>
+      <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-  -->
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
   </distributionManagement>
   <repositories>
     <repository>
