@@ -58,7 +58,7 @@ public enum KeyStyle {
         pw.print(indent(depth));
         pw.println(method.getValue().toMethodString("public static", escapedMethodName(method.getKey()), keyName));
       }
-      for (Node child : node.getChilds()) {
+      for (Node child : node.getChildren()) {
         pw.println();
         pw.print(indent(depth));
         pw.println(String.format("public static class %s {", escapedClassName(child.getName())));
@@ -85,7 +85,7 @@ public enum KeyStyle {
       for (Entry<String, MethodType> method : node.getMethods().entrySet()) {
         parentKeys.add(method.getKey());
       }
-      for (Node child : node.getChilds()) {
+      for (Node child : node.getChildren()) {
         if (parentKeys.contains(child.getName())) {
           errors.add(String.format("If using Bean Style, can not assign a value to the parent key [%s].", child.getFullName()));
         }
@@ -118,7 +118,7 @@ public enum KeyStyle {
         pw.print(indent(depth));
         pw.println(method.getValue().toMethodString("public", beanGetterName(method.getKey(), method.getValue()), keyName));
       }
-      for (Node child : node.getChilds()) {
+      for (Node child : node.getChildren()) {
         String childName = child.getName();
         pw.println();
         pw.print(indent(depth));
@@ -177,7 +177,7 @@ public enum KeyStyle {
   private static final Pattern snakeToCamelPattern = Pattern.compile("_([a-zA-Z])");
 
   /**
-   * @param methodName
+   * @param propertyName
    * @return
    */
   private static String beanGetterName(String propertyName) {
@@ -185,7 +185,7 @@ public enum KeyStyle {
   }
 
   /**
-   * @param methodName
+   * @param propertyName
    * @param methodType
    * @return
    */

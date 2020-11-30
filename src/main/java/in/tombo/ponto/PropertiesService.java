@@ -15,17 +15,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PropertiesService {
-  private Logger logger;
+  private final Logger logger;
 
-  private String[] filePaths;
-  private String envValue;
+  private final String[] filePaths;
+  private final String envValue;
 
   private Properties properties;
   private Properties envProperties;
-  private long scanPeriod;
+  private final long scanPeriod;
   private long loadTime;
 
-  private String encoding;
+  private final String encoding;
 
   public PropertiesService(String loggerName, long scanPeriod, String envValue, String encoding,
       String... filePaths) {
@@ -73,7 +73,7 @@ public class PropertiesService {
 
   private void loggingSettings() {
     if (logger.isInfoEnabled()) {
-      logger.info("Avairable property keys.");
+      logger.info("Available property keys.");
       for (Object keyObj : properties.keySet()) {
         String keyStr = (String) keyObj;
         String useProp;
@@ -102,7 +102,6 @@ public class PropertiesService {
           logger.info("env properties file {} is not found.", envFilePath);
         }
         properties.loadFromXML(getInputStream(filePath));
-        logger.info("properties file {} is loaded.", filePath);
       } else {
         try {
           envProperties.load(new InputStreamReader(getInputStream(envFilePath), encoding));
@@ -111,8 +110,8 @@ public class PropertiesService {
           logger.info("env properties file {} is not found.", envFilePath);
         }
         properties.load(new InputStreamReader(getInputStream(filePath), encoding));
-        logger.info("properties file {} is loaded.", filePath);
       }
+      logger.info("properties file {} is loaded.", filePath);
     } catch (IOException e) {
       logger.error("properties file {} is not found.", filePath);
       throw new RuntimeException(String.format("properties file %s is not found.", filePath));

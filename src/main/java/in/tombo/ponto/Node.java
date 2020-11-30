@@ -9,8 +9,8 @@ import java.util.Map;
 public class Node {
 
   private Node parent = null;
-  private List<Node> childs = new ArrayList<>();
-  private Map<String, MethodType> methods = new HashMap<>();
+  private final List<Node> children = new ArrayList<>();
+  private final Map<String, MethodType> methods = new HashMap<>();
   private String name;
 
   public Node(Node parent, String name) {
@@ -19,15 +19,15 @@ public class Node {
     }
     this.name = name;
     this.parent = parent;
-    this.parent.childs.add(this);
+    this.parent.children.add(this);
   }
 
   public Node getParent() {
     return parent;
   }
 
-  public List<Node> getChilds() {
-    return childs;
+  public List<Node> getChildren() {
+    return children;
   }
 
   public Map<String, MethodType> getMethods() {
@@ -35,8 +35,8 @@ public class Node {
   }
 
   public void addKeyString(String keyString) {
-    String[] elems = keyString.split("\\.");
-    addKeys(elems);
+    String[] elements = keyString.split("\\.");
+    addKeys(elements);
   }
 
   private void addKeys(String[] elems) {
@@ -51,12 +51,12 @@ public class Node {
         return;
       }
     }
-    Node child = getChildsOrCreate(elems[0]);
+    Node child = getChildrenOrCreate(elems[0]);
     child.addKeys(Arrays.copyOfRange(elems, 1, elems.length));
   }
 
-  private Node getChildsOrCreate(String name) {
-    for (Node child : childs) {
+  private Node getChildrenOrCreate(String name) {
+    for (Node child : children) {
       if (child.name.equals(name)) {
         return child;
       }

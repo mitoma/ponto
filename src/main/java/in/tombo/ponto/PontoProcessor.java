@@ -1,29 +1,22 @@
 package in.tombo.ponto;
 
-import static javax.lang.model.SourceVersion.*;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.InvalidPropertiesFormatException;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
+import static javax.lang.model.SourceVersion.RELEASE_8;
 
 @SupportedAnnotationTypes("in.tombo.ponto.ConstantResource")
 @SupportedSourceVersion(RELEASE_8)
@@ -48,7 +41,7 @@ public class PontoProcessor extends AbstractProcessor {
     String[] propFiles = annotation.value();
     String packageName = annotation.packageName();
     String className = annotation.className();
-    long scanPereod = annotation.scanPeriod();
+    long scanPeriod = annotation.scanPeriod();
     String encoding = annotation.encoding();
     Filer filer = processingEnv.getFiler();
     Properties properties = loadProperties(propFiles);
@@ -59,7 +52,7 @@ public class PontoProcessor extends AbstractProcessor {
       for (String err : errors) {
         messager.printMessage(Kind.ERROR, err);
       }
-      throw new IllegalArgumentException("invalid propertie file.");
+      throw new IllegalArgumentException("invalid properties file.");
     }
 
     JavaFileObject source = filer.createSourceFile(String.format("%s.%s", packageName, className));
@@ -92,7 +85,7 @@ public class PontoProcessor extends AbstractProcessor {
 
     pw.printf(
         "  private static in.tombo.ponto.PropertiesService pService = new in.tombo.ponto.PropertiesService(\"%s.%s\", %dL, getEnvValue(), \"%s\", propertyFilePaths);\n",
-        packageName, className, scanPereod, encoding);
+        packageName, className, scanPeriod, encoding);
 
     pw.println("  public static java.util.Properties getProperties() {");
     pw.println("    return pService.getProperties();");
@@ -105,8 +98,7 @@ public class PontoProcessor extends AbstractProcessor {
     pw.close();
   }
 
-  private Properties loadProperties(String[] propFiles) throws IOException,
-      InvalidPropertiesFormatException {
+  private Properties loadProperties(String[] propFiles) throws IOException {
     Properties properties = new Properties();
     Filer filer = processingEnv.getFiler();
     for (String propFile : propFiles) {
